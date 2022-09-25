@@ -1,4 +1,4 @@
-package org.myssi.vc;
+package org.openssi.vc;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
