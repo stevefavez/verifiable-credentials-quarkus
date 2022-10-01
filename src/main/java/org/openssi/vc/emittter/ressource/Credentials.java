@@ -1,19 +1,14 @@
 package org.openssi.vc.emittter.ressource;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.openssi.vc.emittter.model.VerifiableCredentialRequest;
+import org.openssi.vc.model.VerifiableCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 
 /**
@@ -31,18 +26,20 @@ public class Credentials {
     @Produces(MediaType.APPLICATION_JSON)
     public Response ping() {
         LOGGER.debug("Pinging emitter Credentials endpoint");
-        return Response.ok(Json.createObjectBuilder().add("status", "UP").build()).build();
+        return Response.ok(HealthCheckResponse.up("Credentials API is up")).build() ;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response proofCredentials(@HeaderParam("x-credentialType") @DefaultValue("json-ld") String credentialType,
-            JsonObject jsonCredentials) {
+    public Response proofCredentialsTest(final VerifiableCredentialRequest verifiableCredentialRequest) {
         LOGGER.debug("Creating a proofed credential");
-        JsonObject proofedCredential = Json.createObjectBuilder(jsonCredentials).add("proof", "MYpROOF").build();
 
-        return Response.ok(proofedCredential).build();
+        VerifiableCredential verifiableCredential = new VerifiableCredential() ;
+        verifiableCredential.verifiableCredentialBody = verifiableCredentialRequest.verifiableCredentialBody ;
+        verifiableCredential.proof = "fljfjklwe" ;
+
+        return Response.ok(verifiableCredential).build();
     }
 
 }
